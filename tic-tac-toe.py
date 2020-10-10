@@ -60,7 +60,7 @@ if game_select == 2:
 {game_place}''')
                 return end_game()
             # Если количество ходов закончилось, то объявляем ничью
-            if len(close_list) == 8:
+            if len(close_list) == 9:
                 print('Ничья!')
                 return end_game()
         #  Если выбор игроку в уже выбранных ходах, то рекурсивно заново запускаем функцию
@@ -93,7 +93,7 @@ if game_select == 2:
 {game_place}''')
                 return end_game()
             # Если количество ходов закончилось, то объявляем ничью
-            if len(close_list) == 8:
+            if len(close_list) == 9:
                 print('Ничья!')
                 return end_game()
         #  Если выбор игроку в уже выбранных ходах, то рекурсивно заново запускаем функцию
@@ -133,7 +133,7 @@ else:
 {game_place}''')
                 return end_game()
             # Если количество ходов закончилось, то объявляем ничью
-            if len(close_list) == 8:
+            if len(close_list) == 9:
                 print('Ничья!')
                 return end_game()
         #  Если выбор игроку в уже выбранных ходах, то рекурсивно заново запускаем функцию
@@ -192,7 +192,7 @@ else:
                 print(f'''{player1}, Вы проиграли!
 {game_place}''')
                 return end_game()
-            if len(close_list) == 8:
+            if len(close_list) == 9:
                 print(f'''Ничья!
 {game_place}''')
                 return end_game()
