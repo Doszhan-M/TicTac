@@ -13,7 +13,7 @@ allow_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 x = 'X'
 o = 'O'
 # игровая доска
-game_place = ''' ___ ___ ___
+game_place = ''' ___ ___ ___   
  |1| |2| |3|
  --- --- ---
  |4| |5| |6|
@@ -22,8 +22,8 @@ game_place = ''' ___ ___ ___
  --- --- ---'''
 
 
-# Алгоритм игры игрока
 def player_game(player, allow_list, close_list, player_moves, list_for_win, symbol):
+    """Алгоритм игры игрока"""
     global game_place
     player_step = input(f'''{player}, выберите номер клетки, где хотите поставить крестик!
 {game_place}
@@ -54,41 +54,34 @@ def player_game(player, allow_list, close_list, player_moves, list_for_win, symb
         player_game(player, allow_list, close_list, player_moves, list_for_win, symbol)
 
 
-# Локика игры компьютера
 def pc_game(list_for_win, player1_moves, close_list, pc_moves, player):
+    """Локика игры компьютера"""
     global game_place
-    pc_step = []
+    all_step = []
     # Обходим главное множество для сужения вариантов добавляя варианты относительно игрока
     for i in list_for_win:
         if i.intersection(player1_moves):
-            pc_step.append(i)
+            all_step.append(i)
     # Из сортированного множество отбираем множество, относительно уже нажатых цифр
-    pc_step = map(lambda y: y.difference(close_list), pc_step)
-    # Все множества внутри списка меняем на списки для дальнейшей работы
-    pc_step = list(map(list, pc_step))
-    # Если минимальная длина множество равно двум, то
-    if min(list(map(len, pc_step))) == 2:
-        # Среди списков внутри списка рандомно выбираем одну цифру
-        pc_step = random.choice(random.choice(list(map(list, pc_step))))
-    else:
-        # иначе создаем промежуточное множество из элементов pc_step
-        temp_list = set()
-        for m in pc_step:
-            for n in m:
-                temp_list.add(n)
-        # Объединяем множество ходов игрока и множество доступных ходов, это даст варинты для его победы
-        b = player1_moves.union(temp_list)
-        # Из всех вариантов победы, через цикл отбираем реальные варианты победы
-        for s in list_for_win:
-            if s.issubset(b) and bool(s.intersection(temp_list)):
-                t = s.intersection(temp_list)
-                # Если выбранный вариант не в списке уже выбранных ходов и это одно цифра, то окончательон выбираем его
-                if t not in close_list and len(t) == 1:
-                    t = list(map(int, t))
-                    pc_step = t[0]
-        # Если в цикле не удалось выбрать лучший вариант, то выбираем ход для компьютера рандомно из множество доступных
-        if type(pc_step) is list:
-            pc_step = str(random.choice(list(temp_list)))
+    all_step = map(lambda y: y.difference(close_list), all_step)
+    available_step = []
+    # Обходим победный лист удаляя нажатые ходы
+    for s in all_step:
+        for i in player1_moves:
+            s.discard(int(i))
+            available_step.append(s)
+    choice_list = []
+    for i in available_step:
+        # Если минимальная длина списка равно одному, то сторим список вариантов
+        if min(list(map(len, available_step))) == 1:
+            if len(i) == 1:
+                choice_list.append(i)
+        # Если минимальная длина списка равно двум, то сторим список вариантов
+        elif min(list(map(len, available_step))) == 2:
+            if len(i) == 2:
+                choice_list.append(i)
+    # Рандомно выбираем один из доступных вариантов
+    pc_step = str(random.choice(random.choice(list(map(list, choice_list)))))
     # Делаем проверку, есть ли выбор компьютера в уже выбранных ходах, если нет, то добавляем в этот список
     if pc_step not in close_list:
         close_list.add(pc_step)
@@ -108,12 +101,11 @@ def pc_game(list_for_win, player1_moves, close_list, pc_moves, player):
             return end_game()
     else:
         #  Если выбор компьютера в уже выбранных ходах, то рекурсия
-        print('Вы не можете выбрать занятый квадрат! Выберите другой, пожалуйста.')
         pc_game(list_for_win, player1_moves, close_list, pc_moves, player)
 
 
-# Конец игры
 def end_game():
+    """Конец игры"""
     input('Игра окончена! Нажмите любую клавишу, чтобы начать заново...')
     global player1_moves
     global player2_moves
@@ -124,25 +116,24 @@ def end_game():
     player2_moves = set()
     pc_moves = set()
     close_list = set()
-    game_place = ''' ___ ___ ___
-     |1| |2| |3|
-     --- --- ---
-     |4| |5| |6|
-     --- --- ---
-     |7| |8| |9|
-     --- --- ---'''
+    game_place = '''___ ___ ___
+|1| |2| |3|
+--- --- ---
+|4| |5| |6|
+--- --- ---
+|7| |8| |9|
+--- --- ---'''
     start()
     return
 
 
-# Начало игры
 def start():
+    """Начало игры"""
     game_select = input('''
 Выберите, пожалуйста, режим игры: 
 Два игрока, нажмите 2.
 Одиночный режим, нажмите любую клавишу.
 : ''')
-
     # Начало игры за двоих
     if game_select == '2':
         player1 = input('Первый игрок, введите, пожалуйста, ваше имя: ')
