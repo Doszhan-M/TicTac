@@ -126,7 +126,6 @@ def end_game():
     return start()
 
 
-
 def start():
     """Начало игры"""
     game_select = input('''
