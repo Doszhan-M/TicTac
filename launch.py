@@ -123,8 +123,8 @@ def end_game():
 --- --- ---
 |7| |8| |9|
 --- --- ---'''
-    start()
-    return
+    return start()
+
 
 
 def start():
